@@ -1,0 +1,6 @@
+7079f49c9603654c0a233e1ba559695c5312dbf6f45098cacba72aeaa16ad1c1  jhhtaylor.drools-formatter-0.3.1.vsix
+7b5ac18089fe4d7c8b10967618f951fed4685ca4fd8bdb9e20430e725ec7c736  jim-moody.drools-1.2.0.vsix
+71e2b5efdbd51b76794b73da1cb65d228d81cb812b88e23363983dc53bf782e8  kie-group.bpmn-vscode-extension-10.2.0.vsix
+bd88446f655cde1f764b15107c2edd6d4a9decfa71b09bb3353983739058b9a9  kie-group.dmn-vscode-extension-10.2.0.vsix
+a54207039e6d7bfb56c5c02f75b5614f7fffdd0c454892ea1336b11d4c69da97  kie-group.extended-services-vscode-extension-10.2.0.vsix
+e824134c76b8045c47c28257611665f1285b9117bb2cbb14f78fa2f811894976  kie-group.vscode-extension-kie-ba-bundle-10.2.0.vsix
