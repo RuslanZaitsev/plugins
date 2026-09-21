@@ -4,7 +4,7 @@
 
 $order = @(
   # --- base language servers (everything Java depends on redhat.java) ---
-  'redhat.java-*',
+  'redhat.java-1.57.2026090408.vsix',  # НЕ обновлять: новее = сломанный lombok, см. README
   'redhat.vscode-xml-*',
   'redhat.vscode-yaml-*',
   # --- Java tooling ---

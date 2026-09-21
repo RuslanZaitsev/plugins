@@ -36,6 +36,11 @@
   "xml.downloadExternalResources.enabled": false,
   "java.help.firstView": "none",
   "java.help.showReleaseNotes": false,
+  // Баннер "This project is using an older Java runtime (17)... install GitHub Copilot modernization":
+  // это dependency checkup из vscjava.vscode-java-dependency. Кнопка Later откладывает лишь на 10 дней.
+  "java.dependency.enableDependencyCheckup": false,
+  // Не предлагать ставить расширения из Marketplace, которого всё равно нет.
+  "extensions.ignoreRecommendations": true,
 
   // ---------- Формат/удобство (ближе к IDEA) ----------
   "editor.formatOnSave": true,

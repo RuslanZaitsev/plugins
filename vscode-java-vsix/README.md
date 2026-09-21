@@ -99,3 +99,26 @@ Container Tools (1.109), Error Lens (1.107), GitLens (1.101); Java/Spring — 1.
 250+ МБ из-за анализаторов под все языки, то есть не проходит лимит GitHub в 100 МБ на файл
 и потребовал бы нарезки на части. Если он нужен — качается отдельно и переносится
 не через репозиторий. Частично его роль закрывает `shengchen.vscode-checkstyle`.
+
+## Почему redhat.java именно 1.57.2026090408, а не свежее
+
+В билдах с 11.09.2026 (`1.57.2026091108` и новее) внутри лежит ecj
+`org.eclipse.jdt.core.compiler.batch_3.46.200`, где поле
+`ConstructorDeclaration.constructorCall` инкапсулировано — остались только
+`getConstructorCall()` / `getEarlyConstructorCall()` / `getLateConstructorCall()`.
+Встроенный lombok (`1.18.39-4050`) читает это поле напрямую (16 обращений в байт-коде)
+и падает с `java.lang.NoSuchFieldError` → `Internal Error compiling` на каждом файле,
+.class не создаются, автодополнение и диагностика мертвы.
+
+Подмена lombok на более новый не помогает: релиз 1.18.48 (01.09.2026) обращается
+к тому же полю, а edge-сборки на projectlombok.org сейчас нет вовсе.
+Версия агента к тому же берётся из каталога `extension/lombok/` самого расширения,
+а не из зависимостей проекта — поэтому `lombok.version` в pom.xml на это не влияет.
+
+`1.57.2026090408` (04.09.2026) — последний билд с ecj `3.46.100.v20260826`,
+в котором поле ещё публичное. Проверено: `javap` показывает
+`public ExplicitConstructorCall constructorCall;`.
+
+**Не обновлять это расширение**, пока lombok не выпустит версию с поддержкой нового JDT.
+В `settings.recommended.jsonc` автообновления уже выключены
+(`extensions.autoUpdate`, `extensions.autoCheckUpdates`, `update.mode`).
