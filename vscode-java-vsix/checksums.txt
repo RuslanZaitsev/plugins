@@ -1,11 +1,13 @@
 4a55ad43ee2add37d727ac9d476fe6dfd99a67ff0a29b81749812c58e2f27a70  bufbuild.vscode-buf-0.8.19.vsix
 b30c8c66e5617ac12e333485ed60517530e01e1e453affa8e697e194068262c1  dgileadi.java-decompiler-0.0.4.vsix
+9c47584bdfdc312e1d71b1637b6ddae3b40166bf5e0cadddbed9055aa03e3875  donjayamanne.githistory-0.6.20.vsix
 c37ccd9335b4a6c873a0c43b7d15320f7866c004feb106035f469989f6f4df7d  eamodio.gitlens-2026.9.190513.vsix
 cbc0370ff204bc16d84a3ee6830536fc04355856fa0e895ab064e1a03cfcb84a  editorconfig.editorconfig-0.18.2.vsix
 b42a7115649064d8621dd272c526d0d506a44b68cda9642b036fe0acb66496b3  fwcd.kotlin-0.2.36.vsix
 0d2cd9f70181d0854af2060eccb2db4f4dd65f7c52991fc85156640f371ccca7  humao.rest-client-0.25.1.vsix
 b2743cf240e963968c2b769732bd59d0940cc84b1884747526fdd40fa53b33aa  jeppeandersen.vscode-kafka-0.31.0@win32-x64.vsix
 f9717e39d6fd9cc29c950901fe5c05b95a421e556ae8b346fe04004d505cad87  k--kato.intellij-idea-keybindings-1.7.7.vsix
+b0779a30caf9866434900159c71322464e9fd267e3920d9732703819ff831f00  mhutchie.git-graph-1.30.0.vsix
 1474bddc708a1c5ce57912093fea71a5d4d9663a819193a31e5989e4cd288dbb  ms-azuretools.vscode-containers-2.5.1.vsix
 ad9c12f041dcd72df2a675ca7b0fb310ba0366a7f854e97349b426ffdfc08da1  ms-kubernetes-tools.vscode-kubernetes-tools-1.4.1.vsix
 4a95451fe41ff6da67366e09e73ddf3a15b3cd83f42e49c3366f3c2473319085  mtxr.sqltools-0.28.6.vsix
