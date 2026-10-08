@@ -1,0 +1,36 @@
+<!--
+  Фрагмент для C:\Work\.m2\settings.xml (путь уже прописан в
+  "java.configuration.maven.userSettings").
+
+  Направляет вывод protobuf-maven-plugin в target/generated-sources/annotations —
+  каталог, который m2e добавляет в .classpath самостоятельно. После этого JDT LS
+  видит сгенерированные классы без правки pom.xml и без lifecycle mapping.
+
+  Свойства работают потому, что в дескрипторе плагина outputDirectory объявлен
+  с expression: ${javaOutputDirectory} для goal compile и
+  ${protocPluginOutputDirectory} для goal compile-custom (grpc).
+
+  ВАЖНО: если в pom.xml у плагина outputDirectory задан ЯВНО, конфигурация pom
+  перебивает свойство и приём не сработает. Проверить:
+    mvn help:effective-pom -pl digital-ksb-cache-service > eff.xml
+    findstr /N /C:"outputDirectory" eff.xml
+-->
+<settings>
+
+  <profiles>
+    <profile>
+      <id>vscode-proto-sources</id>
+      <properties>
+        <javaOutputDirectory>${project.build.directory}/generated-sources/annotations</javaOutputDirectory>
+        <protocPluginOutputDirectory>${project.build.directory}/generated-sources/annotations</protocPluginOutputDirectory>
+        <!-- тесты, если .proto есть и в src/test/proto -->
+        <javaTestOutputDirectory>${project.build.directory}/generated-test-sources/test-annotations</javaTestOutputDirectory>
+      </properties>
+    </profile>
+  </profiles>
+
+  <activeProfiles>
+    <activeProfile>vscode-proto-sources</activeProfile>
+  </activeProfiles>
+
+</settings>
