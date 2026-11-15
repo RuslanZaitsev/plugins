@@ -1,10 +1,11 @@
-# Offline install of the Java/Spring/Kafka/proto extension set.
+﻿# Offline install of the Java/Spring/Kafka/proto extension set.
 #   powershell -ExecutionPolicy Bypass -File .\install.ps1
 # Order matters: extensionDependencies are not resolved offline, so dependencies go first.
 
 $order = @(
   # --- base language servers (everything Java depends on redhat.java) ---
   'redhat.java-1.57.2026090408.vsix',  # НЕ обновлять: новее = сломанный lombok, см. README
+  'local.m2e-protobuf-*',              # proto-классы без правки pom.xml (зависит от redhat.java)
   'redhat.vscode-xml-*',
   'redhat.vscode-yaml-*',
   # --- Java tooling ---
@@ -29,6 +30,13 @@ $order = @(
   'zxh404.vscode-proto3-*',
   'ms-kubernetes-tools.vscode-kubernetes-tools-*',
   'ms-azuretools.vscode-containers-*',
+  # --- GraphQL (syntax — зависимость основного, ставится первым) ---
+  'GraphQL.vscode-graphql-syntax-*',
+  'GraphQL.vscode-graphql-0*',
+  'GraphQL.vscode-graphql-execution-*',
+  # --- git ---
+  'mhutchie.git-graph-*',
+  'donjayamanne.githistory-*',
   # --- quality / DB / git / UX ---
   'mtxr.sqltools-0*',
   'mtxr.sqltools-driver-pg-*',

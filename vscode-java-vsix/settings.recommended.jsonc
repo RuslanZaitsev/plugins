@@ -61,8 +61,9 @@
 
   // ---------- Proto / gRPC ----------
   // buf по умолчанию скачивает себя с GitHub — в закрытом контуре положить бинарник руками и указать путь.
-  "buf.path": "C:\\tools\\buf\\buf.exe",
-  "buf.checkUpdates": false,
+  // Единственная настройка пути у bufbuild.vscode-buf (ключей buf.path / buf.checkUpdates не существует).
+  // Распаковать buf-Windows-x86_64-v1.73.0.zip и указать путь к buf\\bin\\buf.exe.
+  "buf.commandLine.path": "C:\\tools\\buf\\bin\\buf.exe",
   // Если buf недоступен — останется zxh404.vscode-proto3 (подсветка + go-to-definition по import path):
   "protoc": {
     "path": "C:\\tools\\protoc\\bin\\protoc.exe",

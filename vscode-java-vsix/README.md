@@ -46,6 +46,7 @@ powershell -ExecutionPolicy Bypass -File .\install.ps1
 | `redhat.vscode-xml` | XML LS: `pom.xml` с автодополнением по схеме, Liquibase changelog, XSD/DTD |
 | `jeppeandersen.vscode-kafka` | браузер кластера: топики, партиции, consumer groups, продюсер/консюмер прямо из `.kafka`-файлов |
 | `bufbuild.vscode-buf` | protobuf LSP: навигация, формат, lint (см. примечание ниже) |
+| `local.m2e-protobuf` | сгенерированные protoc-классы видны в Java без правки pom.xml (см. раздел ниже) |
 | `zxh404.vscode-proto3` | подсветка и базовая навигация по `.proto` — запасной вариант, работает без внешних бинарников |
 | `ms-kubernetes-tools.vscode-kubernetes-tools` | кластеры, поды, логи, `kubectl`/OpenShift |
 | `ms-azuretools.vscode-containers` | Dockerfile, compose, образы |
@@ -122,3 +123,122 @@ Container Tools (1.109), Error Lens (1.107), GitLens (1.101); Java/Spring — 1.
 **Не обновлять это расширение**, пока lombok не выпустит версию с поддержкой нового JDT.
 В `settings.recommended.jsonc` автообновления уже выключены
 (`extensions.autoUpdate`, `extensions.autoCheckUpdates`, `update.mode`).
+
+## GraphQL
+
+| Пакет | Назначение |
+|---|---|
+| `GraphQL.vscode-graphql-syntax` | подсветка `.graphql`/`.gql` и GraphQL внутри строк; самодостаточен |
+| `GraphQL.vscode-graphql` | LSP: автодополнение по схеме, валидация, go-to-definition, hover |
+| `GraphQL.vscode-graphql-execution` | выполнение запросов из файла (опционально) |
+
+`syntax` — это `extensionDependencies` основного пакета, оффлайн не подтянется сам,
+поэтому в `install.ps1` он идёт первым.
+
+Умные функции включаются только при наличии graphql-config в корне проекта
+(`graphql.config.yml`), иначе останется одна подсветка:
+
+```yaml
+schema: src/main/resources/graphql/schema.graphqls
+documents: src/main/resources/graphql/**/*.graphql
+```
+
+Схему держать локальным файлом: интроспекция по URL в закрытом контуре не сработает.
+
+## Git
+
+Встроенного SCM-модуля VS Code хватает для commit/push/pull/branch/stash,
+а раскраска файлов по git-статусу в Explorer и разделы Staged Changes / Changes
+в панели Source Control — это тоже встроенное, расширений не требует.
+Добавлены только то, чего в редакторе нет:
+
+| Пакет | Аналог в IDEA |
+|---|---|
+| `mhutchie.git-graph` | вкладка Git Log: граф веток, действия по коммитам. Автономен, без аккаунта и сети |
+| `eamodio.gitlens` | Annotate (blame), история файла/строки, interactive rebase. Облачные функции (Launchpad, AI, Cloud Patches) требуют аккаунта GitKraken и в закрытом контуре не активируются |
+| `donjayamanne.githistory` | Show History — во многом дублирует GitLens, можно не ставить |
+
+Changelists из IDEA аналога не имеют — ни встроенного, ни в расширениях.
+
+## buf CLI (для bufbuild.vscode-buf)
+
+Расширение само бинарник не содержит и по умолчанию тянет его с GitHub Releases —
+в закрытом контуре это не работает, поэтому `buf` лежит рядом:
+
+`buf-Windows-x86_64-v1.73.0.zip` (34 МБ, официальный релиз bufbuild/buf v1.73.0)
+
+Внутри: `buf/bin/buf.exe`, плюс плагины `protoc-gen-buf-lint.exe` и
+`protoc-gen-buf-breaking.exe` (нужны только для `buf lint` / `buf breaking` в CI).
+
+Установка:
+
+```powershell
+Expand-Archive .\buf-Windows-x86_64-v1.73.0.zip -DestinationPath C:\tools -Force
+C:\tools\buf\bin\buf.exe --version    # должно напечатать 1.73.0
+```
+
+Затем в settings.json (ключ именно такой, других у расширения нет):
+
+```json
+"buf.commandLine.path": "C:\\tools\\buf\\bin\\buf.exe"
+```
+
+Если `buf` не нужен — расширение можно не ставить вовсе, `.proto` останутся
+под `zxh404.vscode-proto3` (подсветка и переходы по import).
+
+## proto-классы в VS Code без правки pom.xml — `local.m2e-protobuf` 1.1.0
+
+Ставится через `install.ps1` вместе со всем набором. Настраивать ничего не нужно,
+скрипты-«фиксы» не нужны.
+
+**Как работает.** Это m2e-коннектор, OSGi-бандл для JDT LS, который подключается через
+`contributes.javaExtensions`.
+
+- Привязан к `maven-compiler-plugin` (`compile`/`testCompile`, те же фильтры `compilerId`, что у
+  `m2e.jdt`/`m2e.apt`), а не к самому protobuf-плагину. Поэтому workspace lifecycle mapping
+  с `<ignore/>` или `<execute>` для `protobuf-maven-plugin` его **не выключает**.
+- Находит выполнения `org.xolstice:protobuf-maven-plugin` (`compile`, `compile-custom`, …) и
+  `io.github.ascopes:protobuf-maven-plugin` (`generate`) прямо в модели проекта, включая конфигурацию
+  из `pluginManagement` parent-pom. Их выходные каталоги регистрирует как source folders. Каталог берётся
+  из явного `<outputDirectory>`, затем из свойств `javaOutputDirectory`/`protocPluginOutputDirectory`,
+  затем из дефолтов (`target/generated-sources/protobuf/java`, `.../protobuf/<pluginId>`).
+- **protoc внутри IDE не запускается** (на уровне бандла protobuf goals помечены `ignore`).
+  Классы генерирует обычный `mvn compile`. Без этого JDT LS сам выполняет protoc (маппинг `execute`
+  вшит в jar xolstice), и если protoc в IDE не скачался или не запустился, плагин **сначала очищает**
+  `generated-sources/protobuf` и только потом падает. Сгенерированные `mvn` классы при этом пропадают.
+
+### Проверено в настоящем VS Code 1.103 (изолированный профиль)
+
+Реконструкция `digital-ksb-cache`: parent-pom с `pluginManagement` для xolstice 0.6.1
+(`compile` + `compile-custom`/grpc-java, `os-maven-plugin`), модули `common` и
+`digital-ksb-cache-service`. Код сгенерирован `mvn` 3.9.6 командой
+`mvn compile -pl digital-ksb-cache-service -am`.
+
+| сценарий | без коннектора / 1.0.0 | 1.1.0 |
+|---|---|---|
+| ваш реальный lifecycle-файл с `<ignore/>` для protobuf | **ошибки, каталогов нет в classpath** | 0 ошибок |
+| lifecycle-файла нет | ок | 0 ошибок |
+| lifecycle-файл с `<execute>` | — | 0 ошибок |
+| protoc в IDE недоступен | **классы стёрты, ошибки** | 0 ошибок, классы на месте |
+
+### Порядок на рабочем ПК
+
+```powershell
+powershell -ExecutionPolicy Bypass -File .\install.ps1
+mvn compile -pl digital-ksb-cache-service -am
+```
+Затем в VS Code один раз: `Ctrl+Shift+P` → **Java: Clean Java Language Server Workspace**.
+Локальный `build-helper` в pom можно откатить; если ставили `skip-worktree`, снимите флаг:
+`git update-index --no-skip-worktree digital-ksb-cache-service/pom.xml`.
+
+После изменения `.proto` нужен `mvn compile`, как и в IDEA. VS Code подхватит новые классы сам.
+
+### Если всё же не видно
+
+`fix-proto.ps1 -ProjectRoot <repo>` — необязательная диагностика, она **ничего не меняет**. Показывает:
+установлен ли коннектор; лежат ли `.project`/`.classpath` рядом с pom.xml (тогда модуль импортирован
+как Eclipse-проект и m2e не участвует, ошибка 1013; убрать можно через `check-eclipse-artifacts.ps1 -Remove`);
+есть ли в pom блок `org.eclipse.m2e:lifecycle-mapping` для `maven-compiler-plugin`; сгенерированы ли
+классы вообще.
+
+Исходники коннектора лежат в `m2e-protobuf-src/`: один класс, `plugin.xml` и маппинг.

@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  Workspace lifecycle mapping для JDT LS (redhat.java). Необязателен.
+
+  ВАЖНО: protobuf-maven-plugin здесь НЕ упоминать — ни <ignore/>, ни <execute>.
+  Workspace mapping приоритетнее коннектора local.m2e-protobuf и выключит его.
+  Каталоги protobuf подключает коннектор (см. README, раздел про proto).
+
+  Подключение (User settings.json):
+    "java.configuration.maven.lifecycleMappings": "C:\Users\<user>\AppData\Roaming\Code\User\lifecycle-mapping-metadata.xml"
+  После замены: Ctrl+Shift+P -> Java: Clean Java Language Server Workspace
+-->
+<lifecycleMappingMetadata>
+  <pluginExecutions>
+
+
+    <pluginExecution>
+      <pluginExecutionFilter>
+        <groupId>org.pitest</groupId>
+        <artifactId>pitest-maven</artifactId>
+        <versionRange>[1.0.0,)</versionRange>
+        <goals>
+          <goal>mutationCoverage</goal>
+        </goals>
+      </pluginExecutionFilter>
+      <action>
+        <ignore />
+      </action>
+    </pluginExecution>
+
+    <pluginExecution>
+      <pluginExecutionFilter>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-dependency-plugin</artifactId>
+        <versionRange>[2.0.0,)</versionRange>
+        <goals>
+          <goal>unpack-dependencies</goal>
+          <goal>unpack</goal>
+        </goals>
+      </pluginExecutionFilter>
+      <action>
+        <ignore />
+      </action>
+    </pluginExecution>
+
+    <pluginExecution>
+      <pluginExecutionFilter>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-resources-plugin</artifactId>
+        <versionRange>[2.0.0,)</versionRange>
+        <goals>
+          <goal>resources</goal>
+          <goal>testResources</goal>
+        </goals>
+      </pluginExecutionFilter>
+      <action>
+        <ignore />
+      </action>
+    </pluginExecution>
+
+  </pluginExecutions>
+</lifecycleMappingMetadata>
