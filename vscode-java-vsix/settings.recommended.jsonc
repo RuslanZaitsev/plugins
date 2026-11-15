@@ -1,82 +1,84 @@
-// Рекомендуемые настройки VS Code для Java/Spring/Kafka/proto в закрытом контуре.
-// Скопировать нужное в User settings.json (Ctrl+Shift+P -> Preferences: Open User Settings (JSON)).
-// Пути под Windows — заменить на реальные.
+// Рекомендуемые настройки VS Code для Java/Spring/Maven/Kafka/proto в закрытом контуре (доступ только к Nexus).
+// Скопировать в User settings.json: Ctrl+Shift+P -> Preferences: Open User Settings (JSON).
+// Строки с <...> заменить на реальные пути. Остальное можно брать как есть.
 {
   // ---------- JDK ----------
-  // JDK, на котором запускается сам языковой сервер (JDT LS). Нужен 21+, независимо от версии проекта.
-  "java.jdt.ls.java.home": "C:\\Program Files\\Java\\jdk-21",
-  // JDK, против которых компилируются проекты. default: true — для проектов без явного release.
+  // JDK для языкового сервера Java (JDT LS). Нужна 21+, независимо от версии проекта (SberJDK 25 подходит).
+  "java.jdt.ls.java.home": "<C:\\Program Files\\SberJDK\\25.3.001>",
+  // Spring Tools тоже нужна Java 21+. Без этой строки берётся java из PATH, и при 17 сервер Spring не стартует.
+  "spring-boot.ls.java.home": "<C:\\Program Files\\SberJDK\\25.3.001>",
+  // JDK, под которые компилируются проекты. default: true — для проектов без явного release/target.
   "java.configuration.runtimes": [
-    { "name": "JavaSE-17", "path": "C:\\Program Files\\Java\\jdk-17", "default": true },
-    { "name": "JavaSE-21", "path": "C:\\Program Files\\Java\\jdk-21" }
+    { "name": "JavaSE-17", "path": "<C:\\Program Files\\Java\\jdk-17>", "default": true },
+    { "name": "JavaSE-21", "path": "<C:\\Program Files\\Java\\jdk-21>" }
   ],
-  // Памяти языковому серверу: на монорепе с сотнями модулей дефолта мало.
+  // Память языковому серверу: на больших многомодульных проектах дефолта (1G) мало.
   "java.jdt.ls.vmargs": "-XX:+UseParallelGC -XX:GCTimeRatio=4 -XX:AdaptiveSizePolicyWeight=90 -Dsun.zip.disableMemoryMapping=true -Xmx4G -Xms200m -Xlog:disable",
 
-  // ---------- Maven ----------
-  "java.configuration.maven.userSettings": "C:\\Users\\<user>\\.m2\\settings.xml",
-  "java.configuration.maven.globalSettings": "C:\\Users\\<user>\\.m2\\settings.xml",
-  "maven.executable.path": "C:\\tools\\apache-maven\\bin\\mvn.cmd",
+  // ---------- Maven (всё через Nexus по вашему settings.xml) ----------
+  // Тот же settings.xml, с которым работает mvn в консоли: в нём зеркало на Nexus.
+  "java.configuration.maven.userSettings": "<C:\\Work\\.m2\\settings.xml>",
+  "maven.executable.path": "<C:\\Program Files (x86)\\apache-maven-3.9.6\\bin\\mvn.cmd>",
   "java.maven.downloadSources": true,
   "java.eclipse.downloadSources": true,
-  // Импорт без onlineresolution — артефакты берутся из локального репозитория и Nexus по settings.xml.
   "java.import.maven.enabled": true,
+  // Обновлять classpath при изменении pom.xml без вопроса.
+  "java.configuration.updateBuildConfiguration": "automatic",
+  // Не создавать .project/.classpath в корне модулей: с ними модуль импортируется как Eclipse-проект
+  // в обход Maven (ошибка 1013, пропадают proto-классы и навигация). Это значение по умолчанию, но пусть будет явно.
+  "java.import.generatesMetadataFilesAtProjectRoot": false,
+  // Gradle-проекты: дистрибутив качается по distributionUrl из gradle-wrapper.properties.
+  // Если там services.gradle.org, а не Nexus, импорт Gradle не пройдёт. Для Maven-проектов не важно.
   "java.import.gradle.enabled": true,
   "java.import.gradle.wrapper.enabled": true,
 
-  // ---------- Оффлайн: заглушить всё, что лезет наружу ----------
+  // proto-классы: настраивать ничего не нужно. Это делает расширение local.m2e-protobuf.
+  // java.configuration.maven.lifecycleMappings и java.jdt.ls.protobufSupport.enabled для этого не нужны.
+
+  // ---------- Оффлайн: отключить всё, что ходит в интернет ----------
   "telemetry.telemetryLevel": "off",
   "redhat.telemetry.enabled": false,
   "update.mode": "none",
   "extensions.autoCheckUpdates": false,
+  // Также защищает от автообновления redhat.java: более новые версии ломают lombok (см. README).
   "extensions.autoUpdate": false,
-  // YAML-расширение по умолчанию тянет каталог схем с schemastore.org — в закрытом контуре это висящие запросы.
+  "extensions.ignoreRecommendations": true,
+  // Иначе YAML-расширение тянет каталог схем со schemastore.org, и запросы висят.
   "yaml.schemaStore.enable": false,
-  // XML-расширение не должен ходить за DTD/XSD в интернет.
+  // XML-расширение не должно скачивать DTD/XSD из интернета.
   "xml.downloadExternalResources.enabled": false,
   "java.help.firstView": "none",
   "java.help.showReleaseNotes": false,
-  // Баннер "This project is using an older Java runtime (17)... install GitHub Copilot modernization":
-  // это dependency checkup из vscjava.vscode-java-dependency. Кнопка Later откладывает лишь на 10 дней.
+  // Баннер про Copilot modernization / older Java runtime.
   "java.dependency.enableDependencyCheckup": false,
-  // Не предлагать ставить расширения из Marketplace, которого всё равно нет.
-  "extensions.ignoreRecommendations": true,
+  // Облачные функции GitLens (аккаунт GitKraken) в закрытом контуре не работают — скрыть.
+  "gitlens.plusFeatures.enabled": false,
 
-  // ---------- Формат/удобство (ближе к IDEA) ----------
+  // ---------- Формат и удобство (ближе к IDEA) ----------
   "editor.formatOnSave": true,
-  "editor.formatOnType": true,
+  // Форматировать только изменённые строки. Иначе форматтер Eclipse переформатирует весь файл,
+  // и в коммит, который читают коллеги из IDEA, попадёт огромный дифф.
+  "editor.formatOnSaveMode": "modifications",
   "java.saveActions.organizeImports": true,
   "java.completion.importOrder": ["java", "javax", "jakarta", "org", "com", ""],
   "java.sources.organizeImports.starThreshold": 99,
   "java.sources.organizeImports.staticStarThreshold": 99,
   "java.inlayHints.parameterNames.enabled": "literals",
   "java.references.includeDecompiledSources": true,
-  "editor.inlineSuggest.enabled": true,
   "workbench.editor.enablePreview": false,
 
   // ---------- YAML ----------
-  "yaml.format.enable": true,
   "[yaml]": { "editor.defaultFormatter": "redhat.vscode-yaml", "editor.tabSize": 2 },
-  // Схемы application.yml подтягиваются Spring Boot Tools автоматически из classpath проекта.
+  // Автодополнение в application.yml даёт Spring Tools из classpath проекта, интернет не нужен.
 
   // ---------- Proto / gRPC ----------
-  // buf по умолчанию скачивает себя с GitHub — в закрытом контуре положить бинарник руками и указать путь.
-  // Единственная настройка пути у bufbuild.vscode-buf (ключей buf.path / buf.checkUpdates не существует).
-  // Распаковать buf-Windows-x86_64-v1.73.0.zip и указать путь к buf\\bin\\buf.exe.
-  "buf.commandLine.path": "C:\\tools\\buf\\bin\\buf.exe",
-  // Если buf недоступен — останется zxh404.vscode-proto3 (подсветка + go-to-definition по import path):
-  "protoc": {
-    "path": "C:\\tools\\protoc\\bin\\protoc.exe",
-    "options": ["--proto_path=src/main/proto"]
-  },
+  // bufbuild.vscode-buf: распаковать buf-Windows-x86_64-v1.73.0.zip из набора, например в C:\tools.
+  // Если не распаковывать, удалите эту строку: подсветку .proto останется давать zxh404.vscode-proto3.
+  "buf.commandLine.path": "<C:\\tools\\buf\\bin\\buf.exe>",
 
   // ---------- Kafka ----------
-  // Кластеры удобнее держать в workspace-настройках проекта, а не в User.
-  // "kafka.clusters": [ { "name": "dev", "bootstrap": "kafka-dev:9092" } ],
-
-
-  // ---------- SQL (PostgreSQL) ----------
-  // Подключения задаются через SQLTools UI; драйвер pg ставится отдельным .vsix.
+  // Кластеры лучше держать в настройках проекта (.vscode/settings.json), а не в User.
+  // "kafka.clusters": [ { "name": "dev", "bootstrap": "<kafka-dev:9092>" } ],
 
   // ---------- Терминал ----------
   "terminal.integrated.defaultProfile.windows": "PowerShell"

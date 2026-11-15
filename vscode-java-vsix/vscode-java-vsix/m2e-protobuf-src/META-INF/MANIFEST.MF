@@ -1,0 +1,16 @@
+Manifest-Version: 1.0
+Bundle-ManifestVersion: 2
+Bundle-Name: m2e protobuf connector for JDT LS
+Bundle-SymbolicName: dev.vscode.m2e.protobuf;singleton:=true
+Bundle-Version: 1.1.0
+Bundle-Vendor: local
+Bundle-RequiredExecutionEnvironment: JavaSE-17
+Bundle-ActivationPolicy: lazy
+Require-Bundle: org.eclipse.core.runtime,
+ org.eclipse.core.resources,
+ org.eclipse.jdt.core,
+ org.eclipse.m2e.core;bundle-version="[2.0.0,3.0.0)",
+ org.eclipse.m2e.jdt;bundle-version="[2.0.0,3.0.0)",
+ org.eclipse.m2e.maven.runtime
+Bundle-ClassPath: .
+

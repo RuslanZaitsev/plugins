@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?eclipse version="3.4"?>
+<plugin>
+   <extension point="org.eclipse.m2e.core.projectConfigurators">
+      <configurator
+            id="dev.vscode.m2e.protobuf.configurator"
+            class="dev.vscode.m2e.protobuf.ProtobufSourcesConfigurator"
+            name="Protobuf generated sources"
+            secondaryTo="org.eclipse.m2e.jdt.javaConfigurator">
+      </configurator>
+   </extension>
+   <extension point="org.eclipse.m2e.core.lifecycleMappingMetadataSource">
+   </extension>
+</plugin>

@@ -64,6 +64,18 @@ powershell -ExecutionPolicy Bypass -File .\install.ps1
 | `usernamehw.errorlens` | ошибки и warning'и прямо в строке, как в IDEA |
 | `k--kato.intellij-idea-keybindings` | раскладка горячих клавиш IntelliJ IDEA |
 
+
+## Не ставятся по умолчанию (`optional/`)
+
+В закрытом контуре без интернета от них нет пользы, только уведомления. `install.ps1` их не ставит.
+
+| Пакет | Почему убран |
+|---|---|
+| `fwcd.kotlin` | language server в пакет не входит, расширение скачивает его с GitHub |
+| `ms-kubernetes-tools.vscode-kubernetes-tools` | активируется на любом YAML (в том числе `application.yml`), без `kubectl`/`helm` предлагает скачать их с `dl.k8s.io` |
+
+Поставить вручную, если понадобится: `code --install-extension .\optional\<файл>.vsix`.
+
 ## Что нужно на машине помимо расширений
 
 - **JDK 21+** — на нём запускается языковой сервер JDT LS, независимо от версии Java в проекте.
