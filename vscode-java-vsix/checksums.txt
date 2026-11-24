@@ -33,3 +33,5 @@ ab6fbef42d35a24ab9a4576628a737652af41b85d301c86912604ca999b7abb6  vscjava.vscode
 19afc9b22569c7c528c278eb5f3d6706581e1ba9b232f420e0d91ae246762566  buf-Windows-x86_64-v1.73.0.zip
 b42a7115649064d8621dd272c526d0d506a44b68cda9642b036fe0acb66496b3  optional/fwcd.kotlin-0.2.36.vsix
 ad9c12f041dcd72df2a675ca7b0fb310ba0366a7f854e97349b426ffdfc08da1  optional/ms-kubernetes-tools.vscode-kubernetes-tools-1.4.1.vsix
+fb730ea4306d09cdc0a3aaa9e9baae28058cc97a4fbfce8b056b377a0639a9fe  esbenp.prettier-vscode-12.4.0.vsix
+b6baf90037c903aa21b9c525972910561a903b82e12fe8d67220740ec15b1aa0  DavidAnson.vscode-markdownlint-0.62.1.vsix

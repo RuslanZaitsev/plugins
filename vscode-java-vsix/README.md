@@ -62,6 +62,8 @@ powershell -ExecutionPolicy Bypass -File .\install.ps1
 | `eamodio.gitlens` | blame, история строки, сравнение веток |
 | `editorconfig.editorconfig` | `.editorconfig` |
 | `usernamehw.errorlens` | ошибки и warning'и прямо в строке, как в IDEA |
+| `esbenp.prettier-vscode` | форматтер `.md` (а также JSON, GraphQL); Prettier встроен, Node не нужен. Shift+Alt+F |
+| `DavidAnson.vscode-markdownlint` | линтер Markdown; `Fix all` чинит списки, заголовки, отступы |
 | `k--kato.intellij-idea-keybindings` | раскладка горячих клавиш IntelliJ IDEA |
 
 

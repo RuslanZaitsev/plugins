@@ -67,6 +67,10 @@
   "java.references.includeDecompiledSources": true,
   "workbench.editor.enablePreview": false,
 
+  // ---------- Markdown ----------
+  "[markdown]": { "editor.defaultFormatter": "esbenp.prettier-vscode", "editor.formatOnSave": false, "editor.wordWrap": "on" },
+  "prettier.proseWrap": "preserve",
+
   // ---------- YAML ----------
   "[yaml]": { "editor.defaultFormatter": "redhat.vscode-yaml", "editor.tabSize": 2 },
   // Автодополнение в application.yml даёт Spring Tools из classpath проекта, интернет не нужен.

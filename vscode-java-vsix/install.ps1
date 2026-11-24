@@ -44,6 +44,8 @@ $order = @(
   'eamodio.gitlens-*',
   'editorconfig.editorconfig-*',
   'usernamehw.errorlens-*',
+  'esbenp.prettier-vscode-*',
+  'DavidAnson.vscode-markdownlint-*',
   'k--kato.intellij-idea-keybindings-*'
 )
 
